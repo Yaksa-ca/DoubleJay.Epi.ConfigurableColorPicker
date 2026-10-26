@@ -4,18 +4,17 @@
         <ClientResources Include="$(ProjectDir)ClientResources\**\*"/>
     </ItemGroup>
     <PropertyGroup>
-        <TmpOutDir>$([System.IO.Path]::Combine($(ProjectDir), 'tmp'))</TmpOutDir>
+        <TmpOutDir>$(MSBuildProjectDirectory)\obj\ColorPickerModule</TmpOutDir>
     </PropertyGroup>
     <ItemGroup>
         <Content Include="$(MSBuildProjectName).zip">
             <Pack>true</Pack>
             <PackagePath>contentFiles\any\any\modules\_protected\$(MSBuildProjectName)</PackagePath>
             <BuildAction>None</BuildAction>
-            <PackageCopyToOutput>true</PackageCopyToOutput>
         </Content>
         <Content Include="msbuild\CopyZipFiles.targets" >
             <Pack>true</Pack>
-            <PackagePath>build\$(MSBuildProjectName).targets</PackagePath>
+            <PackagePath>buildTransitive\$(MSBuildProjectName).targets</PackagePath>
         </Content>
     </ItemGroup>
 </Project>

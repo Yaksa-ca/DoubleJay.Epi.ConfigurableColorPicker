@@ -6,6 +6,7 @@ using DoubleJay.Epi.ConfigurableColorPicker.Models;
 using EPiServer.ServiceLocation;
 using EPiServer.Shell.ObjectEditing;
 using EPiServer.Shell.ObjectEditing.EditorDescriptors;
+using EPiServer.Shell;
 
 namespace DoubleJay.Epi.ConfigurableColorPicker.Infrastructure
 {
@@ -29,7 +30,8 @@ namespace DoubleJay.Epi.ConfigurableColorPicker.Infrastructure
                 return;
             }
 
-            metadata.ClientEditingClass = "configurablecolorpicker/ColorPalette";
+            metadata.ClientEditingClass = Paths.ToResource(typeof(ColorPickerEditorDescriptor), "ClientResources/Scripts/ColorPalette.js");
+            metadata.EditorConfiguration["isJavascriptModule"] = true;
             metadata.EditorConfiguration["colors"] = palette?.Colors;
             metadata.EditorConfiguration["maxColumns"] = palette?.MaxColumns ?? 4;
             metadata.EditorConfiguration["showClearButton"] = palette?.ShowClearButton ?? true;

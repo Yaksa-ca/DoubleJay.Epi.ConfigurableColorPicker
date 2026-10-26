@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <Title>DoubleJay.Epi.ConfigurableColorPicker</Title>
     <Description>Configurable color picker for Optimizely CMS</Description>
     <Copyright>Copyright © Jake Jones 2023</Copyright>
@@ -10,17 +10,14 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/jacobjones/DoubleJay.Epi.ConfigurableColorPicker</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>3.0.0</AssemblyVersion>
-    <FileVersion>3.0.0</FileVersion>
-    <PackageVersion>3.0.0</PackageVersion>
+    <Version>4.0.0</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/jacobjones/DoubleJay.Epi.ConfigurableColorPicker/master/icons/color-picker-blue.png</PackageIconUrl>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="EPiServer.CMS.UI.Core" Version="[12.0.2,13.0)" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="EPiServer.CMS.UI.Core" Version="[12.4.0,13.0)" />
+  <ItemGroup>
+    <PackageReference Include="EPiServer.CMS.UI.Core" Version="[13.4.2,14.0.0)" />
+    <None Include="..\README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\icons\color-picker-blue.png">

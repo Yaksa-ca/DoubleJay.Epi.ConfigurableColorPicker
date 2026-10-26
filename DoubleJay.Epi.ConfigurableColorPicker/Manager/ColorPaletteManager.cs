@@ -7,8 +7,9 @@ using System.Xml.Linq;
 using DoubleJay.Epi.ConfigurableColorPicker.Infrastructure;
 using DoubleJay.Epi.ConfigurableColorPicker.Models;
 using EPiServer.DataAbstraction;
+using EPiServer.DataAbstraction.RuntimeModel;
+using EPiServer.Applications;
 using EPiServer.Logging;
-using EPiServer.Web;
 
 namespace DoubleJay.Epi.ConfigurableColorPicker.Manager
 {
@@ -17,15 +18,17 @@ namespace DoubleJay.Epi.ConfigurableColorPicker.Manager
     {
         private readonly IPropertyDefinitionRepository _propertyDefinitionRepository;
         private readonly IContentTypeRepository _contentTypeRepository;
-        private readonly ContentTypeModelRepository _contentTypeModelRepository;
+        private readonly IContentTypeModelRepository _contentTypeModelRepository;
+        private readonly IApplicationResolver _applicationResolver;
 
         private static readonly ILogger Logger = LogManager.GetLogger(typeof(ColorPaletteManager));
 
-        public ColorPaletteManager(IPropertyDefinitionRepository propertyDefinitionRepository, IContentTypeRepository contentTypeRepository, ContentTypeModelRepository contentTypeModelRepository)
+        public ColorPaletteManager(IPropertyDefinitionRepository propertyDefinitionRepository, IContentTypeRepository contentTypeRepository, IContentTypeModelRepository contentTypeModelRepository, IApplicationResolver applicationResolver)
         {
             _propertyDefinitionRepository = propertyDefinitionRepository;
             _contentTypeRepository = contentTypeRepository;
             _contentTypeModelRepository = contentTypeModelRepository;
+            _applicationResolver = applicationResolver;
         }
 
         /// <inheritdoc />
@@ -33,7 +36,7 @@ namespace DoubleJay.Epi.ConfigurableColorPicker.Manager
         {
             var palettes = GetPalettes();
 
-            var siteUrl = SiteDefinition.Current.SiteUrl;
+            var siteUrl = (_applicationResolver.GetByContext() as IRoutableApplication)?.Url;
 
             if (siteUrl == null)
             {

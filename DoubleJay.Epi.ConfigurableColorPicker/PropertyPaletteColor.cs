@@ -2,22 +2,24 @@
 using DoubleJay.Epi.ConfigurableColorPicker.Manager;
 using DoubleJay.Epi.ConfigurableColorPicker.Models;
 using EPiServer.Core;
-using EPiServer.PlugIn;
+using EPiServer.DataAnnotations;
 using EPiServer.ServiceLocation;
 
 namespace DoubleJay.Epi.ConfigurableColorPicker
 {
-    [PropertyDefinitionTypePlugIn]
+    [PropertyDefinitionType]
     public class PropertyPaletteColor : PropertyNumber
     {
         public override object Value
         {
-            get => !Number.HasValue ? null : Locate.Advanced.GetInstance<IColorPaletteManager>().GetColor(Number.Value, PropertyDefinitionID);
+            // PropertyData is created by CMS rather than the DI container. Resolve at access
+            // time so the color follows the current application's palette, even on cached content.
+            get => !Number.HasValue ? null : ServiceLocator.Current.GetInstance<IColorPaletteManager>().GetColor(Number.Value, PropertyDefinitionID);
             set => base.Value = (value as IColor)?.Id ?? value;
         }
 
         public override Type PropertyValueType => typeof(Color);
 
-        public override object SaveData(PropertyDataCollection properties) { return Number; }
+        public override object SaveData() => Number;
     }
 }

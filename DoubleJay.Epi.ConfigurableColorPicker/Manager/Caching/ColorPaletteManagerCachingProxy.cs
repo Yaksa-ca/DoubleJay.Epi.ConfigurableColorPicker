@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using DoubleJay.Epi.ConfigurableColorPicker.Models;
 using EPiServer.DataAbstraction;
+using EPiServer.DataAbstraction.RuntimeModel;
+using EPiServer.Applications;
 using EPiServer.Framework.Cache;
 using EPiServer.ServiceLocation;
 
@@ -15,26 +17,18 @@ namespace DoubleJay.Epi.ConfigurableColorPicker.Manager.Caching
 
         public ColorPaletteManagerCachingProxy(
             IPropertyDefinitionRepository propertyDefinitionRepository, IContentTypeRepository contentTypeRepository,
-            ContentTypeModelRepository contentTypeModelRepository, IObjectInstanceCache objectInstanceCache) : base(
-            propertyDefinitionRepository, contentTypeRepository, contentTypeModelRepository)
+            IContentTypeModelRepository contentTypeModelRepository, IObjectInstanceCache objectInstanceCache,
+            IApplicationResolver applicationResolver) : base(
+            propertyDefinitionRepository, contentTypeRepository, contentTypeModelRepository, applicationResolver)
         {
             _objectInstanceCache = objectInstanceCache;
         }
 
         public override IColor GetColor(int id, int propertyDefinitionId)
         {
-            var cacheKey = $"{nameof(ColorPaletteManager)}:{nameof(GetColor)}:{id}:{propertyDefinitionId}";
-
-            if (_objectInstanceCache.TryGet(cacheKey, ReadStrategy.Immediate, out IColor color))
-            {
-                return color;
-            }
-
-            color =  base.GetColor(id, propertyDefinitionId);
-
-            _objectInstanceCache.Insert(cacheKey, color, new CacheEvictionPolicy(_cachingTimeSpan, CacheTimeoutType.Absolute));
-
-            return color;
+            // Palette selection depends on the current application. Cache the palette
+            // definitions only; caching a resolved color leaks values between sites.
+            return base.GetColor(id, propertyDefinitionId);
         }
 
         public override ICollection<IColorPalette> GetPalettes()
